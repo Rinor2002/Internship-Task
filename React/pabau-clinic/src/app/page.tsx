@@ -3,11 +3,16 @@ import React from 'react';
 import Image from 'next/image';
 import { useState } from 'react';
 
+interface Option{
+  id: number;
+  label: string;
+  image: string;
+}
 export default function Home() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [selectedOption, setSelectedOption] = useState<Option>(null);
 
-  const options = [
+  const options: Option[] = [
     { id: 1, label: 'Dermal Fillers', image: '/dermalFillers.jpeg' },
     { id: 2, label: 'Secret RF', image: '/secretRF.jpeg' },
     { id: 3, label: 'Facials', image: '/facials.jpeg' },
@@ -16,13 +21,13 @@ export default function Home() {
     { id: 6, label: 'Consultation', image: '/consul.jpeg'},
   ];
 
-  const handleOptionSelection = (option) => {
-    setCurrentStep((prevStep) => prevStep + 1);
+  const handleOptionSelection = (option: Option) => {
+    setCurrentStep((prevStep: number) => prevStep + 1);
     setSelectedOption(option);
   };
 
   const handleBack = () => {
-    setCurrentStep((prevStep) => prevStep - 1);
+    setCurrentStep((prevStep: number) => prevStep - 1);
     setSelectedOption(null);
   };
 
