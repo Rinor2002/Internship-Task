@@ -9,6 +9,49 @@ interface Option {
   image: string;
 }
 
+const SelectedOptionForm = ({ selectedOption, handleBack } : { selectedOption : Option, handleBack: () => void}) => {
+  return (
+    <form>
+      <button type="button" className="optionButton" onClick={handleBack}>
+        Back
+      </button>
+      <h2>Selected Option: {selectedOption.label}</h2>
+    </form>
+  );
+}
+
+const Header = ({ currentStep } : { currentStep: number}) => {
+  return (
+    <header>
+      <h2>
+        <strong>Choose Service</strong>
+      </h2>
+      <p>{currentStep}/2</p>
+    </header>
+  );
+}
+
+const OptionsForm = ({ options, handleOptionSelection } : { options: Option[] , handleOptionSelection: (option: Option) => void}) => {
+  return (
+    <form>
+      {options.map((option) => (
+        <button
+          key={option.id}
+          type="button"
+          className="optionButton"
+          onClick={() => handleOptionSelection(option)}
+        >
+          <div>
+            <Image src={option.image} alt="noImage" width={30} height={30} />
+            <span>{option.label}</span>
+          </div>
+          <span>&gt;</span>
+        </button>
+      ))}
+    </form>
+  );
+}
+
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
@@ -31,49 +74,6 @@ export default function Home() {
     setCurrentStep((prevStep: number) => prevStep - 1);
     setSelectedOption(null);
   };
-
-  const Header = ({ currentStep }) => {
-    return (
-      <header>
-        <h2>
-          <strong>Choose Service</strong>
-        </h2>
-        <p>{currentStep}/2</p>
-      </header>
-    );
-  }
-
-  const OptionsForm = ({ options, handleOptionSelection }) => {
-    return (
-      <form>
-        {options.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            className="optionButton"
-            onClick={() => handleOptionSelection(option)}
-          >
-            <div>
-              <Image src={option.image} alt="noImage" width={30} height={30} />
-              <span>{option.label}</span>
-            </div>
-            <span>&gt;</span>
-          </button>
-        ))}
-      </form>
-    );
-  }
-  
-  const SelectedOptionForm = ({ selectedOption, handleBack }) => {
-    return (
-      <form>
-        <button type="button" className="optionButton" onClick={handleBack}>
-          Back
-        </button>
-        <h2>Selected Option: {selectedOption.label}</h2>
-      </form>
-    );
-  }
   return (
     <main>
       <Header currentStep={currentStep} />
