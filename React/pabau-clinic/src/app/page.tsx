@@ -1,90 +1,78 @@
 'use client'
+import React from 'react';
 import Image from 'next/image';
 import { useState } from 'react';
+
 export default function Home() {
-  const [currentStep, setCurrentStep] = useState('1/2');
+  const [currentStep, setCurrentStep] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
-  const handleOptionSelection = (optionName) => {
-    setCurrentStep('2/2');
-    setSelectedOption(optionName);
+
+  const options = [
+    { id: 1, label: 'Dermal Fillers', image: '/dermalFillers.jpeg' },
+    { id: 2, label: 'Secret RF', image: '/secretRF.jpeg' },
+    { id: 3, label: 'Facials', image: '/facials.jpeg' },
+    { id: 4, label: 'Fat Dissolve', image: '/fatDiss.jpeg' },
+    { id: 5, label: 'Growth Factors', image: '/growth.jpeg'},
+    { id: 6, label: 'Consultation', image: '/consul.jpeg'},
+  ];
+
+  const handleOptionSelection = (option) => {
+    setCurrentStep((prevStep) => prevStep + 1);
+    setSelectedOption(option);
   };
 
   const handleBack = () => {
-    setCurrentStep('1/2');
+    setCurrentStep((prevStep) => prevStep - 1);
     setSelectedOption(null);
   };
+
   return (
-   <main>
-    <header>
-      <h2><strong>Choose Service</strong></h2>
-      <p>{currentStep}</p>
-    </header>
-    <section>
-      { selectedOption ? 
-      (
-      <form>
-        <button type="button" className='optionButton' onClick={handleBack}>
-          Back
-        </button>
-        <h2>Selected Option: {selectedOption}</h2>
-      </form>
-      ) 
-      : 
-      (
-      <form>
-        <button type="button" className='optionButton' onClick={() => handleOptionSelection('Dermal Fillers')}>
-          <div>
-            <Image 
-            src="/dermalFillers.jpeg"
-            alt="noImage"
-            width={30}
-            height={30} />
-            <span>Dermal Fillers</span>
-          </div>
-          <span>&gt;</span>
-        </button>
-        <button type="button" className='optionButton' onClick={() => handleOptionSelection('Secret RF')}>
-          <div>
-            <Image 
-            src="/secretRF.jpeg"
-            alt="noImage"
-            width={30}
-            height={30} />
-            <span>Secret RF</span>
-          </div>
-          <span>&gt;</span>
-        </button>
-        <button type="button" className='optionButton' onClick={() => handleOptionSelection('Facials')}>
-          <div>
-            <Image 
-            src="/facials.jpeg"
-            alt="noImage"
-            width={30}
-            height={30} />
-            <span>Facials</span>
-          </div>
-          <span>&gt;</span>
-        </button>
-        <button type="button" className='optionButton' onClick={() => handleOptionSelection('Fat Dissolve')}>
-          <div>
-            <Image 
-            src="/fatDiss.jpeg"
-            alt="noImage"
-            width={30}
-            height={30} />
-            <span>Fat Dissolve</span>
-          </div>
-          <span>&gt;</span>
-        </button>
-      </form>
-      )}
-      <span className='consultation'>
-        Not sure about consultation type? Please, call - <strong> 0203 7959063</strong>
-      </span>
-    </section>
-    <footer>
-      <span>Powered by Pabau</span>
-    </footer>
-   </main>
-  )
+    <main>
+      <header>
+        <h2>
+          <strong>Choose Service</strong>
+        </h2>
+        <p>
+          {currentStep}/2
+        </p>
+      </header>
+      <section>
+        {/* 
+        since we only had to make 2 pages ( 1/2 , 2/2 ), I used a ternary operator
+        Of course that would need to be changed if we had more pages
+        */}
+        {selectedOption ? (
+          <form>
+            <button type="button" className="optionButton" onClick={handleBack}>
+              Back
+            </button>
+            <h2>Selected Option: {selectedOption.label}</h2>
+          </form>
+        ) : (
+          <form>
+            {options.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className="optionButton"
+                onClick={() => handleOptionSelection(option)}
+              >
+                <div>
+                  <Image src={option.image} alt="noImage" width={30} height={30} />
+                  <span>{option.label}</span>
+                </div>
+                <span>&gt;</span>
+              </button>
+            ))}
+          </form>
+        )}
+        <span className="consultation">
+          Not sure about the consultation type? Please call - <strong> 0203 7959063</strong>
+        </span>
+      </section>
+      <footer>
+        <span>Powered by Pabau</span>
+      </footer>
+    </main>
+  );
 }
