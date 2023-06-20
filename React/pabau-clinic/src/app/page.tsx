@@ -3,14 +3,15 @@ import React from 'react';
 import Image from 'next/image';
 import { useState } from 'react';
 
-interface Option{
+interface Option {
   id: number;
   label: string;
   image: string;
 }
+
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [selectedOption, setSelectedOption] = useState<Option>(null);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
   const options: Option[] = [
     { id: 1, label: 'Dermal Fillers', image: '/dermalFillers.jpeg' },
@@ -31,45 +32,60 @@ export default function Home() {
     setSelectedOption(null);
   };
 
-  return (
-    <main>
+  const Header = ({ currentStep }) => {
+    return (
       <header>
         <h2>
           <strong>Choose Service</strong>
         </h2>
-        <p>
-          {currentStep}/2
-        </p>
+        <p>{currentStep}/2</p>
       </header>
+    );
+  }
+
+  const OptionsForm = ({ options, handleOptionSelection }) => {
+    return (
+      <form>
+        {options.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            className="optionButton"
+            onClick={() => handleOptionSelection(option)}
+          >
+            <div>
+              <Image src={option.image} alt="noImage" width={30} height={30} />
+              <span>{option.label}</span>
+            </div>
+            <span>&gt;</span>
+          </button>
+        ))}
+      </form>
+    );
+  }
+  
+  const SelectedOptionForm = ({ selectedOption, handleBack }) => {
+    return (
+      <form>
+        <button type="button" className="optionButton" onClick={handleBack}>
+          Back
+        </button>
+        <h2>Selected Option: {selectedOption.label}</h2>
+      </form>
+    );
+  }
+  return (
+    <main>
+      <Header currentStep={currentStep} />
       <section>
         {/* 
         since we only had to make 2 pages ( 1/2 , 2/2 ), I used a ternary operator
         Of course that would need to be changed if we had more pages
         */}
-        {selectedOption ? (
-          <form>
-            <button type="button" className="optionButton" onClick={handleBack}>
-              Back
-            </button>
-            <h2>Selected Option: {selectedOption.label}</h2>
-          </form>
+        {selectedOption !== null ? (
+          <SelectedOptionForm selectedOption={selectedOption} handleBack={handleBack} />
         ) : (
-          <form>
-            {options.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                className="optionButton"
-                onClick={() => handleOptionSelection(option)}
-              >
-                <div>
-                  <Image src={option.image} alt="noImage" width={30} height={30} />
-                  <span>{option.label}</span>
-                </div>
-                <span>&gt;</span>
-              </button>
-            ))}
-          </form>
+          <OptionsForm options={options} handleOptionSelection={handleOptionSelection} />
         )}
         <span className="consultation">
           Not sure about the consultation type? Please call - <strong> 0203 7959063</strong>
